@@ -291,7 +291,7 @@
     endif
 
     if has('gui_gtk')
-      set gfn=Ubuntu\ Mono\ 11
+      set gfn=Droid\ Sans\ Mono\ for\ Powerline\ 11
     endif
   else
     if $COLORTERM == 'gnome-terminal'
@@ -708,14 +708,20 @@
   nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
 
   if count(s:settings.plugin_groups, 'custom') " {{{
+    NeoBundle 'tikhomirov/vim-glsl'
+    NeoBundle 'derekwyatt/vim-protodef'
+    NeoBundle 'derekwyatt/vim-fswitch'
     NeoBundle 'kshenoy/vim-signature'
     NeoBundle 'vim-scripts/peaksea'
     NeoBundle 'myusuf3/numbers.vim'
+    NeoBundle 'endel/vim-github-colorscheme'
+    NeoBundle 'tejr/vim-tmux'
+    NeoBundle 'benmills/vimux'
+    NeoBundle 'osyo-manga/vim-over'
+    NeoBundle 'wesgibbs/vim-irblack'
   endif
   " }}}
 "}}}
-
-"
 
 " mappings {{{
   " formatting shortcuts
