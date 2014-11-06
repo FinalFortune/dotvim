@@ -54,6 +54,7 @@
     if s:is_windows
       call add(s:settings.plugin_groups, 'windows')
     endif
+    call add(s:settings.plugin_groups, 'custom') " My own plugins 
 
     " exclude all language-specific plugins by default
     if !exists('g:dotvim_settings.plugin_groups_exclude')
@@ -696,6 +697,7 @@
       nmap <F4> <Plug>ToggleGoldenViewAutoResize
     "}}}
   endif "}}}
+
   if count(s:settings.plugin_groups, 'windows') "{{{
     NeoBundleLazy 'PProvost/vim-ps1', {'autoload':{'filetypes':['ps1']}} "{{{
       autocmd BufNewFile,BufRead *.ps1,*.psd1,*.psm1 setlocal ft=ps1
@@ -704,7 +706,16 @@
   endif "}}}
 
   nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
+
+  if count(s:settings.plugin_groups, 'custom') " {{{
+    NeoBundle 'kshenoy/vim-signature'
+    NeoBundle 'vim-scripts/peaksea'
+    NeoBundle 'myusuf3/numbers.vim'
+  endif
+  " }}}
 "}}}
+
+"
 
 " mappings {{{
   " formatting shortcuts
@@ -878,7 +889,6 @@
       exec 'NeoBundleDisable '.plugin
     endfor
   endif
-
   call neobundle#end()
   filetype plugin indent on
   syntax enable
