@@ -21,7 +21,7 @@
 
   " initialize default settings
   let s:settings = {}
-  let s:settings.default_indent = 2
+  let s:settings.default_indent = 4 
   let s:settings.max_column = 120
   let s:settings.autocomplete_method = 'neocomplcache'
   let s:settings.enable_cursorcolumn = 0
@@ -313,11 +313,11 @@
 " plugin/mapping configuration {{{
   if count(s:settings.plugin_groups, 'core') "{{{
     NeoBundle 'matchit.zip'
-    NeoBundle 'bling/vim-airline' "{{{
-      let g:airline#extensions#tabline#enabled = 1
-      let g:airline#extensions#tabline#left_sep=' '
-      let g:airline#extensions#tabline#left_alt_sep='¦'
-    "}}}
+    " NeoBundle 'bling/vim-airline' "{{{
+    "   let g:airline#extensions#tabline#enabled = 1
+    "   let g:airline#extensions#tabline#left_sep=' '
+    "   let g:airline#extensions#tabline#left_alt_sep='¦'
+    " "}}}
     NeoBundle 'tpope/vim-surround'
     NeoBundle 'tpope/vim-repeat'
     NeoBundle 'tpope/vim-dispatch'
@@ -385,7 +385,7 @@
   endif "}}}
   if count(s:settings.plugin_groups, 'python') "{{{
     NeoBundleLazy 'klen/python-mode', {'autoload':{'filetypes':['python']}} "{{{
-      let g:pymode_rope=0
+      let g:pymode_rope_completion=0
     "}}}
     NeoBundleLazy 'davidhalter/jedi-vim', {'autoload':{'filetypes':['python']}} "{{{
       let g:jedi#popup_on_dot=0
@@ -450,7 +450,7 @@
       "}}}
     endif "}}}
     if s:settings.autocomplete_method == 'neocomplete' "{{{
-      NeoBundleLazy 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} "{{{
+      NeoBundle 'Shougo/neocomplete.vim', {'autoload':{'insert':1}, 'vim_version':'7.3.885'} "{{{
         let g:neocomplete#enable_at_startup=1
         let g:neocomplete#data_directory=s:get_cache_dir('neocomplete')
       "}}}
@@ -498,7 +498,6 @@
       endif
     "}}}
     NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}} "{{{
-      let g:undotree_SplitLocation='botright'
       let g:undotree_SetFocusWhenToggle=1
       nnoremap <silent> <F5> :UndotreeToggle<CR>
     "}}}
@@ -569,7 +568,7 @@
 
       if executable('ag')
         let g:unite_source_grep_command='ag'
-        let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S -C4'
+        let g:unite_source_grep_default_opts='--nocolor --line-numbers --nogroup -S'
         let g:unite_source_grep_recursive_opt=''
       elseif executable('ack')
         let g:unite_source_grep_command='ack'
@@ -708,6 +707,7 @@
   nnoremap <leader>nbu :Unite neobundle/update -vertical -no-start-insert<cr>
 
   if count(s:settings.plugin_groups, 'custom') " {{{
+    NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
     NeoBundle 'tikhomirov/vim-glsl'
     NeoBundle 'derekwyatt/vim-protodef'
     NeoBundle 'derekwyatt/vim-fswitch'
@@ -716,9 +716,68 @@
     NeoBundle 'myusuf3/numbers.vim'
     NeoBundle 'endel/vim-github-colorscheme'
     NeoBundle 'tejr/vim-tmux'
+    NeoBundle 'tpope/vim-rsi'
     NeoBundle 'benmills/vimux'
     NeoBundle 'osyo-manga/vim-over'
     NeoBundle 'wesgibbs/vim-irblack'
+    NeoBundle 'marius/unite-fasd'
+    NeoBundle 'thinca/vim-qfreplace'
+    NeoBundle 'xolox/vim-misc'
+    NeoBundle 'xolox/vim-session' " {{{
+      let g:session_directory = s:get_cache_dir('sessions')
+      let g:session_lock_directory = s:get_cache_dir('lock')
+    " }}}
+    " " NeoBundle 'tpope/vim-obsession'
+    " NeoBundle 'xolox/vim-easytags' "{{{
+    "   " required by vim easytags
+    "   let g:easytags_async = 1
+    "   let g:easytags_dynamic_files=2
+    "
+    " " }}}
+    NeoBundle 'osyo-manga/vim-anzu' " {{{
+        " mapping
+        nmap n <Plug>(anzu-n-with-echo)
+        nmap N <Plug>(anzu-N-with-echo)
+        nmap * <Plug>(anzu-star-with-echo)
+        nmap # <Plug>(anzu-sharp-with-echo)
+
+        " clear status
+        nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
+
+        " statusline
+        set statusline=%{anzu#search_status()}
+    " }}}
+
+    NeoBundleLazy 'osyo-manga/vim-marching', {'autoload':{'filetypes':['cpp']}} " {{{
+      let g:marching_enable_neocomplete = 1
+      " let g:marching#clang_command#options = {
+      "       \  "cpp" : "-std=gnu++ly"
+      "       \}
+
+      if !exists('g:neocomplete#force_omni_input_patterns')
+        let g:neocomplete#force_omni_input_patterns = {}
+      endif
+
+      let g:marching_clang_command_option="-std=gnu++11"
+
+      let g:marching_include_paths = [ "/usr/include/c++/4.9.2",
+            \ "/usr/include/c++/4.9.2/x86_64-unknown-linux-gnu",
+            \]
+
+      " let g:marching_include_paths = filter(
+      " \       split(glob('/usr/include/c++/*'), '\n') +
+      " \       split(glob('/usr/include/*/c++/*'), '\n') +
+      " \       split(glob('/usr/include/*/'), '\n'),
+      " \       'isdirectory(v:val)')
+
+      let g:neocomplete#force_omni_input_patterns.cpp =
+          \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+  
+      imap <buffer> <C-x><C-o> <Plug>(marching_start_omni_complete)
+  
+      imap <buffer> <C-x><C-x><C-o> <Plug>(marching_force_start_omni_complete)
+
+    " }}}
   endif
   " }}}
 "}}}
@@ -733,7 +792,8 @@
   nmap <silent> <leader>e :call Source(line('.'), line('.'))<CR>
   vmap <silent> <leader>e :call Source(line('v'), line('.'))<CR>
 
-  nnoremap <leader>w :w<cr>
+  " update quicker than :w
+  nnoremap <leader>w :update<cr>
 
   " toggle paste
   map <F6> :set invpaste<CR>:set paste?<CR>
